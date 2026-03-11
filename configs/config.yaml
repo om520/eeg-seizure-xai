@@ -1,0 +1,60 @@
+# Global experiment configuration
+
+seed: 42
+device: "cuda"
+
+data:
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  sampling_rate: 256          # Hz (CHB-MIT)
+  window_seconds: 4
+  window_step_seconds: 2      # overlap
+  channels: null              # null -> use all available EEG channels
+  train_split: 0.7
+  val_split: 0.15
+  test_split: 0.15
+  balance_strategy: "none"    # or "undersample", "oversample"
+
+training:
+  batch_size: 64
+  num_epochs: 50
+  lr: 1e-4
+  weight_decay: 1e-2
+  gradient_accumulation_steps: 2
+  use_amp: true
+  early_stopping_patience: 10
+  warmup_epochs: 3
+  max_grad_norm: 1.0
+  num_workers: 4
+
+model:
+  d_model: 128
+  nhead: 4
+  num_layers: 3
+  dim_feedforward: 256
+  dropout: 0.1
+  classifier_dropout: 0.1
+
+loss:
+  focal_alpha: 0.25
+  focal_gamma: 2.0
+
+scheduler:
+  use_scheduler: true
+  t_max: 50
+  eta_min: 1e-6
+
+mc_dropout:
+  num_samples: 20
+  eval_batch_size: 128
+
+logging:
+  use_wandb: true
+  project_name: "eeg-seizure-xai"
+  run_name: "transformer_chbmit"
+  output_dir: "outputs"
+  models_dir: "outputs/models"
+  plots_dir: "outputs/plots"
+  reports_dir: "outputs/reports"
+  save_final_model: true
+  save_best_model: true
